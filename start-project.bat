@@ -6,7 +6,7 @@ REM Wait 10 seconds for MySQL to be up
 timeout /t 10 /nobreak
 
 REM Go to your project folder
-cd /d "C:\Users\Karma\Desktop\library.html\new.html\robocoder-project-2025-11-23T15-08-08"
+cd /d "C:\Users\Karma\Desktop\library.html\new.html"
 
 REM Start the Node.js server in a new window
 start cmd /k "npm start"
