@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report Books – Library Management System</title>
+<style>
+    :root {
+      --bg1: #ffecd2;
+      --bg2: #fcb69f;
+      --accent: #ff6f61;
+      --soft: #ffe6df;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #002147, #00897B);
+        color: #333;
+        overflow-x: hidden;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    nav {
+        width: 100%;
+        padding: 15px 20px;
+        background: var(--accent);
+        backdrop-filter: blur(10px);
+        font-size: 22px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-align: center;
+        box-shadow: 0px 4px 20px rgba(0,0,0,0.2);
+        color: white;
+        position: relative;
+    }
+
+    .back-btn {
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.2);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .back-btn:hover {
+        background: rgba(255,255,255,0.3);
+    }
+
+    .container {
+        width: 90%;
+        max-width: 500px;
+        margin: 60px auto;
+        background: rgba(255,255,255,0.9);
+        padding: 30px;
+        border-radius: 20px;
+        backdrop-filter: blur(15px);
+        box-shadow: 0px 4px 25px rgba(0,0,0,0.2);
+        animation: fadeIn 1s ease-in-out;
+        flex: 1;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container h2 {
+        text-align: center;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: var(--accent);
+    }
+
+    label {
+        font-size: 15px;
+        font-weight: bold;
+        margin-top: 15px;
+        display: block;
+        color: #333;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        outline: none;
+        font-size: 15px;
+        box-sizing: border-box;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.1);
+    }
+
+    textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 20px;
+        padding: 12px;
+        background: var(--accent);
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        transform: scale(1.02);
+        background: #ff5c50;
+    }
+
+    button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .message {
+        margin-top: 15px;
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: bold;
+        display: none;
+    }
+
+    .success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .loading {
+        background: #e2e3e5;
+        color: #383d41;
+        border: 1px solid #d6d8db;
+    }
+
+    .footer {
+        margin-top: auto;
+        padding: 15px;
+        text-align: center;
+        background: rgba(0,0,0,0.1);
+        backdrop-filter: blur(10px);
+        letter-spacing: 1px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .book-search {
+        position: relative;
+    }
+
+    .book-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #ddd;
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+    }
+
+    .book-suggestion {
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #eee;
+    }
+
+    .book-suggestion:hover {
+        background: #f8f9fa;
+    }
+
+    .book-suggestion:last-child {
+        border-bottom: none;
+    }
+
+    .optional-note {
+        font-size: 12px;
+        color: #666;
+        margin-top: 5px;
+    }
+    .top-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* keeps title centered */
+  background: var(--accent);
+  color: white;
+  padding: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+}
+
+.logo {
+  position: absolute;
+  left: 16px;
+  height: 40px;      /* adjust as you like */
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-title {
+  pointer-events: none;
+}
+
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <img src="logo.png" alt="Library Logo" class="logo">
+    <a href="index.html" class="back-btn">← Back</a>
+    <span class="nav-title">Report issue</span>
+</nav>
+
+
+<div class="container">
+    <h2>Report a Book Issue</h2>
+
+    <form id="reportForm">
+        <div class="book-search">
+            <label>Book ID or Search</label>
+            <input type="text" id="bookSearch" placeholder="Enter book ID or search by title/author">
+            <div class="book-suggestions" id="bookSuggestions"></div>
+            <div class="optional-note">Optional - leave blank for general reports</div>
+        </div>
+
+        <label>Your Name *</label>
+        <input type="text" id="reporterName" placeholder="Enter your name" required>
+
+        <label>Issue Description *</label>
+        <textarea id="issueDescription" rows="4" placeholder="Describe the problem in detail (e.g., torn pages, missing cover, etc.)" required></textarea>
+
+        <button type="submit" id="submitBtn">Submit Report</button>
+    </form>
+
+    <div class="message" id="message"></div>
+</div>
+
+<div class="footer">Created by Arpan and Karma</div>
+
+<script>
+    let books = [];
+    let selectedBookId = null;
+
+    // Load books for search
+    async function loadBooks() {
+        try {
+            const response = await fetch('/api/books');
+            books = await response.json();
+        } catch (error) {
+            console.error('Error loading books:', error);
+        }
+    }
+
+    // Setup book search functionality
+    function setupBookSearch() {
+        const bookSearch = document.getElementById('bookSearch');
+        const suggestions = document.getElementById('bookSuggestions');
+
+        bookSearch.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            if (query.length < 2) {
+                suggestions.style.display = 'none';
+                selectedBookId = null;
+                return;
+            }
+
+            // Check if it's a direct ID
+            if (/^\d+$/.test(query)) {
+                const book = books.find(b => b.id == query);
+                if (book) {
+                    selectedBookId = book.id;
+                    suggestions.style.display = 'none';
+                    return;
+                }
+            }
+
+            // Search by title or author
+            const matches = books.filter(book => 
+                book.title.toLowerCase().includes(query) ||
+                book.author.toLowerCase().includes(query) ||
+                book.isbn.toLowerCase().includes(query)
+            ).slice(0, 5);
+
+            if (matches.length > 0) {
+                suggestions.innerHTML = matches.map(book => `
+                    <div class="book-suggestion" data-id="${book.id}">
+                        <strong>${book.title}</strong> by ${book.author}
+                        <br><small>ID: ${book.id}</small>
+                    </div>
+                `).join('');
+                suggestions.style.display = 'block';
+            } else {
+                suggestions.style.display = 'none';
+            }
+        });
+
+        // Handle suggestion clicks
+        suggestions.addEventListener('click', (e) => {
+            const suggestion = e.target.closest('.book-suggestion');
+            if (suggestion) {
+                const bookId = suggestion.dataset.id;
+                const book = books.find(b => b.id == bookId);
+                
+                bookSearch.value = `${book.id} - ${book.title}`;
+                selectedBookId = book.id;
+                suggestions.style.display = 'none';
+            }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.book-search')) {
+                suggestions.style.display = 'none';
+            }
+        });
+    }
+
+    // Handle form submission
+    function setupFormSubmission() {
+        const form = document.getElementById('reportForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const message = document.getElementById('message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const bookSearch = document.getElementById('bookSearch').value;
+            const reporterName = document.getElementById('reporterName').value;
+            const issueDescription = document.getElementById('issueDescription').value;
+
+            if (!reporterName || !issueDescription) {
+                showMessage('Please fill in your name and issue description', 'error');
+                return;
+            }
+
+            // Determine book ID
+            let bookId = selectedBookId;
+            if (!bookId && bookSearch) {
+                // Try to extract ID from search field
+                const idMatch = bookSearch.match(/^(\d+)/);
+                if (idMatch) {
+                    bookId = parseInt(idMatch[1]);
+                }
+            }
+
+            // Prepare report data
+            const reportData = {
+                book_id: bookId || null,
+                reporter_name: reporterName,
+                issue_description: issueDescription
+            };
+
+            // Submit report
+            submitBtn.disabled = true;
+            showMessage('Submitting report...', 'loading');
+
+            try {
+                const response = await fetch('/api/reports', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(reportData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage('Report submitted successfully! Thank you for helping us maintain our library.', 'success');
+                    form.reset();
+                    selectedBookId = null;
+                } else {
+                    showMessage(result.error || 'Failed to submit report', 'error');
+                }
+            } catch (error) {
+                console.error('Report submission error:', error);
+                showMessage('Server error. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
+    // Show message helper
+    function showMessage(text, type) {
+        const message = document.getElementById('message');
+        message.textContent = text;
+        message.className = `message ${type}`;
+        message.style.display = 'block';
+
+        if (type === 'success') {
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000);
+        }
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadBooks();
+        setupBookSearch();
+        setupFormSubmission();
+    });
+</script>
+
+</body>
+</html>

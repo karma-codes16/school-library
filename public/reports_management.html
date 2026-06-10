@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Reports - Library Management System</title>
+    <style>
+        :root {
+            --bg1: #ffecd2;
+            --bg2: #fcb69f;
+            --accent: #ff6f61;
+            --soft: #ffe6df;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #002147, #00897B);
+            min-height: 100vh;
+        }
+
+        nav {
+            background: var(--accent);
+            color: white;
+            padding: 18px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 120px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .reports-section {
+            background: var(--soft);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .section-title {
+            color: var(--accent);
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            background: white;
+            color: var(--accent);
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .reports-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        }
+
+        .report-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+        .report-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .report-id {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-resolved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-dismissed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .book-info {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .book-title {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .reporter-info {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .issue-description {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .report-date {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 15px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .btn-resolve {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-dismiss {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-resolve:hover {
+            background: #218838;
+        }
+
+        .btn-dismiss:hover {
+            background: #c82333;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
+        }
+
+        .error {
+            text-align: center;
+            color: #c0392b;
+            padding: 20px;
+            background: #ffeaea;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            padding: 40px;
+            font-style: italic;
+        }
+
+        .resolution-form {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .resolution-form textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 60px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .resolution-form input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        .resolution-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-save {
+            background: var(--accent);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-cancel {
+            background: #6c757d;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .top-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* keeps title centered */
+  background: var(--accent);
+  color: white;
+  padding: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+}
+
+.logo {
+  position: absolute;
+  left: 16px;
+  height: 40px;      /* adjust as you like */
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-title {
+  pointer-events: none;
+}
+
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <img src="logo.png" alt="Library Logo" class="logo">
+    <span class="nav-title">Manage reports</span>
+</nav>
+
+
+    <div class="container">
+        <!-- Statistics Bar -->
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-number" id="totalReports">-</div>
+                <div class="stat-label">Total Reports</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingReports">-</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="resolvedReports">-</div>
+                <div class="stat-label">Resolved</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="dismissedReports">-</div>
+                <div class="stat-label">Dismissed</div>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div class="reports-section">
+            <div class="section-header">
+                <h2 class="section-title">Book Issue Reports</h2>
+                <div class="filter-controls">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="pending">Pending</button>
+                    <button class="filter-btn" data-filter="resolved">Resolved</button>
+                    <button class="filter-btn" data-filter="dismissed">Dismissed</button>
+                </div>
+            </div>
+
+            <div id="reportsLoading" class="loading">Loading reports...</div>
+            <div id="reportsError" class="error" style="display: none;"></div>
+            <div id="emptyState" class="empty-state" style="display: none;">No reports found</div>
+            
+            <div class="reports-grid" id="reportsGrid" style="display: none;">
+                <!-- Reports will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allReports = [];
+        let currentFilter = 'all';
+
+        // Load reports data
+        async function loadReports() {
+            try {
+                const response = await fetch('/api/reports');
+                if (!response.ok) throw new Error('Failed to fetch reports');
+                
+                allReports = await response.json();
+                updateStatistics();
+                displayReports();
+                
+                document.getElementById('reportsLoading').style.display = 'none';
+                document.getElementById('reportsGrid').style.display = 'grid';
+            } catch (error) {
+                console.error('Error loading reports:', error);
+                document.getElementById('reportsLoading').style.display = 'none';
+                document.getElementById('reportsError').style.display = 'block';
+                document.getElementById('reportsError').textContent = 'Failed to load reports. Please check if the server is running.';
+            }
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const total = allReports.length;
+            const pending = allReports.filter(r => r.status === 'pending').length;
+            const resolved = allReports.filter(r => r.status === 'resolved').length;
+            const dismissed = allReports.filter(r => r.status === 'dismissed').length;
+
+            document.getElementById('totalReports').textContent = total;
+            document.getElementById('pendingReports').textContent = pending;
+            document.getElementById('resolvedReports').textContent = resolved;
+            document.getElementById('dismissedReports').textContent = dismissed;
+        }
+
+        // Display reports based on current filter
+        function displayReports() {
+            const filteredReports = currentFilter === 'all' 
+                ? allReports 
+                : allReports.filter(report => report.status === currentFilter);
+
+            const grid = document.getElementById('reportsGrid');
+            const emptyState = document.getElementById('emptyState');
+
+            if (filteredReports.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                emptyState.textContent = currentFilter === 'all' 
+                    ? 'No reports found' 
+                    : `No ${currentFilter} reports found`;
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            grid.style.display = 'grid';
+            
+            grid.innerHTML = filteredReports.map(report => createReportCard(report)).join('');
+        }
+
+        // Create report card HTML
+        function createReportCard(report) {
+            const reportDate = new Date(report.report_date).toLocaleDateString();
+            const resolvedDate = report.resolved_date ? new Date(report.resolved_date).toLocaleDateString() : null;
+            
+            return `
+                <div class="report-card" data-id="${report.id}">
+                    <div class="report-header">
+                        <div class="report-id">Report #${report.id}</div>
+                        <span class="status-badge status-${report.status}">${report.status.toUpperCase()}</span>
+                    </div>
+                    
+                    ${report.book_title ? `
+                        <div class="book-info">
+                            <div class="book-title">${report.book_title}</div>
+                            <div>by ${report.book_author}</div>
+                        </div>
+                    ` : '<div class="book-info"><em>General Report (No specific book)</em></div>'}
+                    
+                    <div class="reporter-info">
+                        <strong>Reported by:</strong> ${report.reporter_name}
+                    </div>
+                    
+                    <div class="issue-description">
+                        ${report.issue_description}
+                    </div>
+                    
+                    <div class="report-date">
+                        Reported on: ${reportDate}
+                        ${resolvedDate ? `<br>Resolved on: ${resolvedDate}` : ''}
+                    </div>
+                    
+                    ${report.status === 'pending' ? `
+                        <div class="action-buttons">
+                            <button class="action-btn btn-resolve" onclick="showResolutionForm(${report.id}, 'resolved')">
+                                Mark as Resolved
+                            </button>
+                            <button class="action-btn btn-dismiss" onclick="showResolutionForm(${report.id}, 'dismissed')">
+                                Dismiss Report
+                            </button>
+                        </div>
+                        
+                        <div class="resolution-form" id="form-${report.id}">
+                            <input type="text" id="resolvedBy-${report.id}" placeholder="Your name" required>
+                            <textarea id="notes-${report.id}" placeholder="Resolution notes (optional)"></textarea>
+                            <div class="resolution-buttons">
+                                <button class="btn-save" onclick="updateReportStatus(${report.id})">Save</button>
+                                <button class="btn-cancel" onclick="hideResolutionForm(${report.id})">Cancel</button>
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    ${report.status !== 'pending' && report.resolution_notes ? `
+                        <div class="book-info">
+                            <strong>Resolution:</strong> ${report.resolution_notes}
+                            <br><small>Resolved by: ${report.resolved_by || 'Unknown'}</small>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Show resolution form
+        function showResolutionForm(reportId, status) {
+            const form = document.getElementById(`form-${reportId}`);
+            form.style.display = 'block';
+            form.dataset.status = status;
+        }
+
+        // Hide resolution form
+        function hideResolutionForm(reportId) {
+            const form = document.getElementById(`form-${reportId}`);
+            form.style.display = 'none';
+            form.dataset.status = '';
+        }
+
+        // Update report status
+        async function updateReportStatus(reportId) {
+            const form = document.getElementById(`form-${reportId}`);
+            const status = form.dataset.status;
+            const resolvedBy = document.getElementById(`resolvedBy-${reportId}`).value.trim();
+            const notes = document.getElementById(`notes-${reportId}`).value.trim();
+
+            if (!resolvedBy) {
+                alert('Please enter your name');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/reports/${reportId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        status: status,
+                        resolved_by: resolvedBy,
+                        resolution_notes: notes
+                    })
+                });
+
+                if (response.ok) {
+                    // Reload reports to show updated data
+                    await loadReports();
+                } else {
+                    const error = await response.json();
+                    alert('Failed to update report: ' + (error.error || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error updating report:', error);
+                alert('Server error. Please try again.');
+            }
+        }
+
+        // Setup filter buttons
+        function setupFilters() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Update active button
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Update filter and display
+                    currentFilter = button.dataset.filter;
+                    displayReports();
+                });
+            });
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadReports();
+            setupFilters();
+        });
+    </script>
+
+</body>
+</html>

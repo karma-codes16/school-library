@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Borrow & Return – Library Management System</title>
+
+<style>
+    :root {
+      --bg1: #ffecd2;
+      --bg2: #fcb69f;
+      --accent: #ff6f61;
+      --soft: #ffe6df;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #002147, #00897B);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      background: var(--accent);
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .container {
+      width: 90%;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 25px;
+      background: var(--soft);
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.18);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      font-weight: bold;
+      margin-top: 12px;
+      display: block;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-top: 5px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      font-size: 16px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: var(--accent);
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.02);
+      background: #ff5c50;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      display: none;
+    }
+
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .loading {
+      background: #e2e3e5;
+      color: #383d41;
+      border: 1px solid #d6d8db;
+    }
+
+    .borrower-type-fields {
+      display: none;
+      margin-top: 10px;
+      padding: 15px;
+      background: rgba(255,255,255,0.5);
+      border-radius: 10px;
+    }
+
+    .footer {
+      margin-top: auto;
+      padding: 12px;
+      text-align: center;
+      background: var(--accent);
+      color: white;
+      font-weight: bold;
+    }
+
+    .book-search {
+      position: relative;
+    }
+
+    .book-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 1000;
+      display: none;
+    }
+
+    .book-suggestion {
+      padding: 10px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+    }
+
+    .book-suggestion:hover {
+      background: #f8f9fa;
+    }
+
+    .book-suggestion:last-child {
+      border-bottom: none;
+    }
+
+    .top-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* keeps title centered */
+  background: var(--accent);
+  color: white;
+  padding: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+}
+
+.logo {
+  position: absolute;
+  left: 16px;
+  height: 40px;      /* adjust as you like */
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-title {
+  pointer-events: none;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="top-nav">
+    <img src="logo.png" alt="Library Logo" class="logo">
+    <a href="index.html" class="back-btn">← Back</a>
+    <span class="nav-title">Library Data</span>
+</nav>
+
+
+<div class="container">
+    <h2>Borrow / Return Book</h2>
+
+    <form id="transactionForm">
+        <div class="form-group">
+            <label>Select Action *</label>
+            <select id="action" required>
+                <option value="">Choose action...</option>
+                <option value="borrow">Borrow Book</option>
+                <option value="return">Return Book</option>
+            </select>
+        </div>
+
+        <div class="form-group book-search">
+            <label>Book ID or Search *</label>
+            <input type="text" id="bookSearch" placeholder="Enter book ID or search by title/author" required>
+            <div class="book-suggestions" id="bookSuggestions"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Borrower Name *</label>
+            <input type="text" id="borrowerName" placeholder="Enter borrower name" required>
+        </div>
+
+        <div id="borrowerFields" class="borrower-type-fields">
+            <div class="form-group">
+                <label>Borrower Type</label>
+                <select id="borrowerType">
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="studentFields">
+                <label>Class & Roll</label>
+                <input type="text" id="classRoll" placeholder="e.g. Class 10, Roll 15">
+            </div>
+
+            <div class="form-group" id="teacherFields" style="display: none;">
+                <label>Subject</label>
+                <input type="text" id="subject" placeholder="e.g. Mathematics">
+            </div>
+
+            <div class="form-group">
+                <label>Phone (Optional)</label>
+                <input type="text" id="phone" placeholder="Phone number">
+            </div>
+        </div>
+
+        <button type="submit" id="submitBtn">Process Transaction</button>
+    </form>
+
+    <div class="message" id="message"></div>
+</div>
+
+<div class="footer">Created by Arpan and Karma</div>
+
+<script>
+    let books = [];
+    let selectedBookId = null;
+
+    // Load books for search
+    async function loadBooks() {
+        try {
+            const response = await fetch('/api/books');
+            books = await response.json();
+        } catch (error) {
+            console.error('Error loading books:', error);
+        }
+    }
+
+    // Setup book search functionality
+    function setupBookSearch() {
+        const bookSearch = document.getElementById('bookSearch');
+        const suggestions = document.getElementById('bookSuggestions');
+
+        bookSearch.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            if (query.length < 2) {
+                suggestions.style.display = 'none';
+                selectedBookId = null;
+                return;
+            }
+
+            // Check if it's a direct ID
+            if (/^\d+$/.test(query)) {
+                const book = books.find(b => b.id == query);
+                if (book) {
+                    selectedBookId = book.id;
+                    suggestions.style.display = 'none';
+                    return;
+                }
+            }
+
+            // Search by title or author
+            const matches = books.filter(book => 
+                book.title.toLowerCase().includes(query) ||
+                book.author.toLowerCase().includes(query) ||
+                book.isbn.toLowerCase().includes(query)
+            ).slice(0, 5);
+
+            if (matches.length > 0) {
+                suggestions.innerHTML = matches.map(book => `
+                    <div class="book-suggestion" data-id="${book.id}">
+                        <strong>${book.title}</strong> by ${book.author}
+                        <br><small>ID: ${book.id} | Available: ${book.available_copies}/${book.total_copies}</small>
+                    </div>
+                `).join('');
+                suggestions.style.display = 'block';
+            } else {
+                suggestions.style.display = 'none';
+            }
+        });
+
+        // Handle suggestion clicks
+        suggestions.addEventListener('click', (e) => {
+            const suggestion = e.target.closest('.book-suggestion');
+            if (suggestion) {
+                const bookId = suggestion.dataset.id;
+                const book = books.find(b => b.id == bookId);
+                
+                bookSearch.value = `${book.id} - ${book.title}`;
+                selectedBookId = book.id;
+                suggestions.style.display = 'none';
+            }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.book-search')) {
+                suggestions.style.display = 'none';
+            }
+        });
+    }
+
+    // Setup borrower type fields
+    function setupBorrowerFields() {
+        const action = document.getElementById('action');
+        const borrowerFields = document.getElementById('borrowerFields');
+        const borrowerType = document.getElementById('borrowerType');
+        const studentFields = document.getElementById('studentFields');
+        const teacherFields = document.getElementById('teacherFields');
+
+        action.addEventListener('change', (e) => {
+            if (e.target.value === 'borrow') {
+                borrowerFields.style.display = 'block';
+            } else {
+                borrowerFields.style.display = 'none';
+            }
+        });
+
+        borrowerType.addEventListener('change', (e) => {
+            if (e.target.value === 'student') {
+                studentFields.style.display = 'block';
+                teacherFields.style.display = 'none';
+            } else {
+                studentFields.style.display = 'none';
+                teacherFields.style.display = 'block';
+            }
+        });
+    }
+
+    // Handle form submission
+    function setupFormSubmission() {
+        const form = document.getElementById('transactionForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const message = document.getElementById('message');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const action = document.getElementById('action').value;
+            const bookSearch = document.getElementById('bookSearch').value;
+            const borrowerName = document.getElementById('borrowerName').value;
+
+            if (!action || !bookSearch || !borrowerName) {
+                showMessage('Please fill all required fields', 'error');
+                return;
+            }
+
+            // Determine book ID
+            let bookId = selectedBookId;
+            if (!bookId) {
+                // Try to extract ID from search field
+                const idMatch = bookSearch.match(/^(\d+)/);
+                if (idMatch) {
+                    bookId = parseInt(idMatch[1]);
+                } else {
+                    showMessage('Please select a valid book', 'error');
+                    return;
+                }
+            }
+
+            // Prepare transaction data
+            const transactionData = {
+                action: action,
+                book_id: bookId,
+                borrower_name: borrowerName
+            };
+
+            // Add borrower details for new borrowings
+            if (action === 'borrow') {
+                transactionData.borrower_type = document.getElementById('borrowerType').value;
+                transactionData.class_roll = document.getElementById('classRoll').value;
+                transactionData.subject = document.getElementById('subject').value;
+                transactionData.phone = document.getElementById('phone').value;
+            }
+
+            // Submit transaction
+            submitBtn.disabled = true;
+            showMessage('Processing transaction...', 'loading');
+
+            try {
+                const response = await fetch('/api/transactions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(transactionData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showMessage(result.message + (result.fine ? ` (${result.fine})` : ''), 'success');
+                    form.reset();
+                    selectedBookId = null;
+                    document.getElementById('borrowerFields').style.display = 'none';
+                    
+                    // Reload books to update availability
+                    await loadBooks();
+                } else {
+                    showMessage(result.error || 'Transaction failed', 'error');
+                }
+            } catch (error) {
+                console.error('Transaction error:', error);
+                showMessage('Server error. Please try again.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
+    // Show message helper
+    function showMessage(text, type) {
+        const message = document.getElementById('message');
+        message.textContent = text;
+        message.className = `message ${type}`;
+        message.style.display = 'block';
+
+        if (type === 'success') {
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000);
+        }
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadBooks();
+        setupBookSearch();
+        setupBorrowerFields();
+        setupFormSubmission();
+    });
+</script>
+
+</body>
+</html>

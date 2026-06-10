@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Add Book - Library</title>
+
+  <style>
+    /* Same warm color combination used before */
+    :root {
+      --bg1: #ffecd2;
+      --bg2: #fcb69f;
+      --accent: #ff6f61;
+      --soft: #ffe6df;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #002147, #00897B);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      background: var(--accent);
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    /* Card (glass-style) */
+    .card {
+      width: 460px;
+      max-width: 95%;
+      background: rgba(255,255,255,0.9);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      color: #333;
+      font-size: 20px;
+      text-align: center;
+    }
+
+    .card p.help {
+      margin: 0 0 18px;
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .form-row .input {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 13px;
+      color: #444;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], input[type="number"], textarea {
+      padding: 10px 12px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #e6e6e6;
+      outline: none;
+      transition: box-shadow .2s, border-color .2s;
+    }
+
+    input:focus, textarea:focus {
+      box-shadow: 0 4px 12px rgba(255,111,97,0.12);
+      border-color: var(--accent);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+    }
+
+    .actions {
+      display:flex;
+      gap:12px;
+      margin-top: 14px;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: .3px;
+      transition: transform .14s ease, box-shadow .14s;
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    button.secondary {
+      background: var(--soft);
+      color: #b03e30;
+    }
+
+    button:hover { 
+      transform: translateY(-3px); 
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12); 
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .message {
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 20px;
+      text-align:center;
+      font-weight: 600;
+    }
+
+    footer {
+      background: rgba(0,0,0,0.25);
+      color: white;
+      text-align: center;
+      padding: 12px 8px;
+      font-size: 15px;
+      letter-spacing: .6px;
+    }
+
+    /* small helper so kids understand */
+    .hint { 
+      font-size: 12px; 
+      color:#666; 
+      margin-top:6px; 
+    }
+
+    .success {
+      color: #2e8b57;
+    }
+
+    .error {
+      color: #c0392b;
+    }
+
+    .loading {
+      color: #444;
+    }
+    .top-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* keeps title centered */
+  background: var(--accent);
+  color: white;
+  padding: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+}
+
+.logo {
+  position: absolute;
+  left: 16px;
+  height: 40px;      /* adjust as you like */
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-title {
+  pointer-events: none;
+}
+
+  </style>
+</head>
+<body>
+
+  <nav class="top-nav">
+    <img src="logo.png" alt="Library Logo" class="logo">
+    <a href="index.html" class="back-btn">← Back</a>
+    <span class="nav-title">Add new Book</span>
+</nav>
+
+
+  <main>
+    <div class="card">
+      <h2>Add a New Book</h2>
+      <p class="help">Fill the form below and click Add Book</p>
+
+      <!-- FORM -->
+      <div>
+        <div class="form-row">
+          <div class="input">
+            <label>Title *</label>
+            <input id="title" type="text" placeholder="Book title (e.g. Harry Potter)" required />
+          </div>
+
+          <div class="input">
+            <label>Author *</label>
+            <input id="author" type="text" placeholder="Author name" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input">
+            <label>ISBN *</label>
+            <input id="isbn" type="text" placeholder="ISBN or unique code" required />
+            <span class="hint">Keep ISBN unique so it's easy to find later</span>
+          </div>
+
+          <div class="input">
+            <label>Copies *</label>
+            <input id="copies" type="number" min="1" value="1" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input" style="flex:1;">
+            <label>Category</label>
+            <input id="category" type="text" placeholder="e.g. Fiction, Science" />
+          </div>
+        </div>
+
+        <div style="margin-top:8px;">
+          <label>Description</label>
+          <textarea id="description" placeholder="Short description (optional)"></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="addBtn">Add Book</button>
+          <button class="secondary" id="clearBtn" type="button">Clear</button>
+        </div>
+
+        <div class="message" id="msg"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>Created by Arpan and Karma</footer>
+
+  <script>
+    // Easy to read JS (for beginners)
+    const addBtn = document.getElementById('addBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const msg = document.getElementById('msg');
+
+    // helper to read field values
+    function getField(id){ 
+      return document.getElementById(id).value.trim(); 
+    }
+
+    // clear form
+    clearBtn.addEventListener('click', () => {
+      ['title','author','isbn','copies','category','description'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+      msg.textContent = '';
+      msg.className = 'message';
+    });
+
+    // when Add Book pressed
+    addBtn.addEventListener('click', async () => {
+      // read values
+      const book = {
+        title: getField('title'),
+        author: getField('author'),
+        isbn: getField('isbn'),
+        copies: Number(getField('copies') || 0),
+        category: getField('category'),
+        description: getField('description')
+      };
+
+      // basic validation
+      if (!book.title || !book.author || !book.isbn || book.copies < 1) {
+        msg.className = 'message error';
+        msg.textContent = 'Please fill Title, Author, ISBN and Copies (>=1).';
+        return;
+      }
+
+      // disable button during request
+      addBtn.disabled = true;
+      msg.className = 'message loading';
+      msg.textContent = 'Adding book...';
+
+      try {
+        const res = await fetch('/api/books', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(book)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          msg.className = 'message success';
+          msg.textContent = 'Book added successfully!';
+          
+          // clear form after success
+          setTimeout(() => {
+            ['title','author','isbn','copies','category','description'].forEach(id => {
+              document.getElementById(id).value = '';
+            });
+            msg.textContent = '';
+            msg.className = 'message';
+          }, 2000);
+        } else {
+          // show error message returned by backend
+          msg.className = 'message error';
+          msg.textContent = data.error || 'Failed to add book.';
+        }
+
+      } catch (err) {
+        msg.className = 'message error';
+        msg.textContent = 'Server error. Please check if the backend is running.';
+        console.error('Error adding book:', err);
+      } finally {
+        addBtn.disabled = false;
+      }
+    });
+
+    // Allow Enter key to submit
+    document.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !addBtn.disabled) {
+        addBtn.click();
+      }
+    });
+  </script>
+</body>
+</html>

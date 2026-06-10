@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fines – Library Management System</title>
+<style>
+    :root {
+      --bg1: #ffecd2;
+      --bg2: #fcb69f;
+      --accent: #ff6f61;
+      --soft: #ffe6df;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #002147, #00897B);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    nav {
+      background: var(--accent);
+      color: white;
+      padding: 18px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+      position: relative;
+    }
+
+    .back-btn {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 30px;
+        border-radius: 20px;
+        background: var(--soft);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 25px rgba(0,0,0,0.2);
+        animation: fadeIn 1s ease-in-out;
+        flex: 1;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+        text-align: center;
+        color: var(--accent);
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    .stats-section {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        text-align: center;
+        min-width: 150px;
+        flex: 1;
+        max-width: 200px;
+    }
+
+    .stat-number {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--accent);
+        margin-bottom: 5px;
+    }
+
+    .stat-label {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .calculator-section {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+
+    .calculator-title {
+        color: var(--accent);
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .form-row {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .form-group {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+        color: #333;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    input:focus, select:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.1);
+    }
+
+    .calculate-btn {
+        width: 100%;
+        padding: 12px;
+        margin-top: 15px;
+        background: var(--accent);
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .calculate-btn:hover {
+        background: #ff5c50;
+        transform: translateY(-2px);
+    }
+
+    .result-box {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        text-align: center;
+        display: none;
+    }
+
+    .result-amount {
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--accent);
+        margin-bottom: 5px;
+    }
+
+    .fines-table-section {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .table-title {
+        color: var(--accent);
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .filter-controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .filter-btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 20px;
+        background: #f8f9fa;
+        color: var(--accent);
+        cursor: pointer;
+        font-weight: 600;
+        transition: 0.3s;
+        font-size: 14px;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+        background: var(--accent);
+        color: white;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    th {
+        background: var(--accent);
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    td {
+        padding: 12px;
+        font-size: 14px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    tr:nth-child(even) {
+        background: #f8f9fa;
+    }
+
+    tr:hover {
+        background: #e9ecef;
+        transition: 0.3s;
+    }
+
+    .status-badge {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .status-unpaid {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-paid {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .status-waived {
+        background: #cce5ff;
+        color: #004085;
+    }
+
+    .action-btn {
+        padding: 4px 8px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: 600;
+        margin-right: 5px;
+    }
+
+    .btn-pay {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-waive {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .loading {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        padding: 40px;
+    }
+
+    .error {
+        text-align: center;
+        color: #c0392b;
+        padding: 20px;
+        background: #ffeaea;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+
+    .empty-state {
+        text-align: center;
+        color: #666;
+        padding: 40px;
+        font-style: italic;
+    }
+
+    .footer {
+        margin-top: auto;
+        padding: 15px;
+        text-align: center;
+        background: rgba(0,0,0,0.1);
+        backdrop-filter: blur(10px);
+        letter-spacing: 1px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    @media (max-width: 768px) {
+        .form-row {
+            flex-direction: column;
+        }
+        
+        .stats-section {
+            flex-direction: column;
+        }
+        
+        table {
+            font-size: 12px;
+        }
+        
+        th, td {
+            padding: 8px;
+        }
+    }
+    .top-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* keeps title centered */
+  background: var(--accent);
+  color: white;
+  padding: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.18);
+}
+
+.logo {
+  position: absolute;
+  left: 16px;
+  height: 40px;      /* adjust as you like */
+  width: auto;
+  object-fit: contain;
+}
+
+.nav-title {
+  pointer-events: none;
+}
+
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <img src="logo.png" alt="Library Logo" class="logo">
+    <span class="nav-title">Fines Management</span>
+</nav>
+
+
+<div class="container">
+    <h2>Library Fines Management</h2>
+
+    <!-- Statistics Section -->
+    <div class="stats-section">
+        <div class="stat-card">
+            <div class="stat-number" id="totalFines">-</div>
+            <div class="stat-label">Total Fines</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="unpaidFines">-</div>
+            <div class="stat-label">Unpaid</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="totalAmount">-</div>
+            <div class="stat-label">Total Amount (₹)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="unpaidAmount">-</div>
+            <div class="stat-label">Unpaid Amount (₹)</div>
+        </div>
+    </div>
+
+    <!-- Fine Calculator Section -->
+    <div class="calculator-section">
+        <div class="calculator-title">Fine Calculator</div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label>Borrower Name</label>
+                <input type="text" id="calcBorrowerName" placeholder="Enter borrower name">
+            </div>
+            <div class="form-group">
+                <label>Book Title</label>
+                <input type="text" id="calcBookTitle" placeholder="Enter book title">
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label>Days Late</label>
+                <input type="number" id="calcDaysLate" placeholder="Enter number of late days" min="0">
+            </div>
+            <div class="form-group">
+                <label>Fine Per Day (₹)</label>
+                <input type="number" id="calcFinePerDay" value="5" min="1">
+            </div>
+        </div>
+        
+        <button class="calculate-btn" onclick="calculateFine()">Calculate Fine</button>
+        
+        <div class="result-box" id="calcResult">
+            <div class="result-amount" id="calcAmount">₹0</div>
+            <div>Total Fine Amount</div>
+        </div>
+    </div>
+
+    <!-- Fines Table Section -->
+    <div class="fines-table-section">
+        <div class="table-title">All Fines</div>
+        
+        <div class="filter-controls">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="unpaid">Unpaid</button>
+            <button class="filter-btn" data-filter="paid">Paid</button>
+            <button class="filter-btn" data-filter="waived">Waived</button>
+        </div>
+
+        <div id="finesLoading" class="loading">Loading fines...</div>
+        <div id="finesError" class="error" style="display: none;"></div>
+        <div id="emptyState" class="empty-state" style="display: none;">No fines found</div>
+        
+        <table id="finesTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Borrower</th>
+                    <th>Book</th>
+                    <th>Days Late</th>
+                    <th>Amount (₹)</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data loaded from backend -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="footer">Created by Arpan and Karma</div>
+
+<script>
+    let allFines = [];
+    let currentFilter = 'all';
+
+    // Load fines data
+    async function loadFines() {
+        try {
+            const response = await fetch('/api/fines');
+            if (!response.ok) throw new Error('Failed to fetch fines');
+            
+            allFines = await response.json();
+            updateStatistics();
+            displayFines();
+            
+            document.getElementById('finesLoading').style.display = 'none';
+            document.getElementById('finesTable').style.display = 'table';
+        } catch (error) {
+            console.error('Error loading fines:', error);
+            document.getElementById('finesLoading').style.display = 'none';
+            document.getElementById('finesError').style.display = 'block';
+            document.getElementById('finesError').textContent = 'Failed to load fines. Please check if the server is running.';
+        }
+    }
+
+    // Update statistics
+    function updateStatistics() {
+        const total = allFines.length;
+        const unpaid = allFines.filter(f => f.paid_status === 'unpaid').length;
+        const totalAmount = allFines.reduce((sum, f) => sum + parseFloat(f.fine_amount), 0);
+        const unpaidAmount = allFines.filter(f => f.paid_status === 'unpaid')
+                                    .reduce((sum, f) => sum + parseFloat(f.fine_amount), 0);
+
+        document.getElementById('totalFines').textContent = total;
+        document.getElementById('unpaidFines').textContent = unpaid;
+        document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
+        document.getElementById('unpaidAmount').textContent = unpaidAmount.toFixed(2);
+    }
+
+    // Display fines based on current filter
+    function displayFines() {
+        const filteredFines = currentFilter === 'all' 
+            ? allFines 
+            : allFines.filter(fine => fine.paid_status === currentFilter);
+
+        const tbody = document.querySelector("#finesTable tbody");
+        const emptyState = document.getElementById('emptyState');
+        const table = document.getElementById('finesTable');
+
+        if (filteredFines.length === 0) {
+            table.style.display = 'none';
+            emptyState.style.display = 'block';
+            emptyState.textContent = currentFilter === 'all' 
+                ? 'No fines found' 
+                : `No ${currentFilter} fines found`;
+            return;
+        }
+
+        emptyState.style.display = 'none';
+        table.style.display = 'table';
+        tbody.innerHTML = '';
+        
+        filteredFines.forEach(fine => {
+            const createdDate = new Date(fine.created_at).toLocaleDateString();
+            const statusClass = `status-${fine.paid_status}`;
+            
+            const row = `
+                <tr>
+                    <td>${fine.id}</td>
+                    <td>${fine.borrower_name}</td>
+                    <td>${fine.book_title}</td>
+                    <td>${fine.days_late}</td>
+                    <td>₹${parseFloat(fine.fine_amount).toFixed(2)}</td>
+                    <td><span class="status-badge ${statusClass}">${fine.paid_status.toUpperCase()}</span></td>
+                    <td>${createdDate}</td>
+                    <td>
+                        ${fine.paid_status === 'unpaid' ? `
+                            <button class="action-btn btn-pay" onclick="updateFineStatus(${fine.id}, 'paid')">
+                                Mark Paid
+                            </button>
+                            <button class="action-btn btn-waive" onclick="updateFineStatus(${fine.id}, 'waived')">
+                                Waive
+                            </button>
+                        ` : '-'}
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+    }
+
+    // Calculate fine
+    function calculateFine() {
+        const daysLate = parseInt(document.getElementById('calcDaysLate').value) || 0;
+        const finePerDay = parseInt(document.getElementById('calcFinePerDay').value) || 5;
+        
+        if (daysLate < 0) {
+            alert('Days late cannot be negative');
+            return;
+        }
+        
+        const totalFine = daysLate * finePerDay;
+        
+        document.getElementById('calcAmount').textContent = `₹${totalFine}`;
+        document.getElementById('calcResult').style.display = 'block';
+    }
+
+    // Update fine status
+    async function updateFineStatus(fineId, status) {
+        if (!confirm(`Are you sure you want to mark this fine as ${status}?`)) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/fines/${fineId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paid_status: status })
+            });
+
+            if (response.ok) {
+                // Reload fines to show updated data
+                await loadFines();
+            } else {
+                const error = await response.json();
+                alert('Failed to update fine: ' + (error.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error updating fine:', error);
+            alert('Server error. Please try again.');
+        }
+    }
+
+    // Setup filter buttons
+    function setupFilters() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Update filter and display
+                currentFilter = button.dataset.filter;
+                displayFines();
+            });
+        });
+    }
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', () => {
+        loadFines();
+        setupFilters();
+    });
+</script>
+
+</body>
+</html>
