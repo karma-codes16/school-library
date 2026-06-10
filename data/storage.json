@@ -1,0 +1,171 @@
+{
+  "books": [
+    {
+      "id": 1,
+      "title": "Harry Potter and the Philosopher's Stone",
+      "author": "J.K. Rowling",
+      "isbn": "978-0747532699",
+      "total_copies": 5,
+      "available_copies": 3,
+      "category": "Fiction",
+      "description": "First book in the Harry Potter series",
+      "created_at": "2024-01-01T00:00:00.000Z"
+    }
+  ],
+  "borrowers": [
+    {
+      "id": 1,
+      "name": "Rohan Kumar",
+      "type": "student",
+      "class_roll": "Class 10, Roll 12",
+      "subject": null,
+      "phone": "9876543210",
+      "email": "rohan@email.com",
+      "created_at": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "name": "Mr. Amit Sharma",
+      "type": "teacher",
+      "class_roll": null,
+      "subject": "English",
+      "phone": "9876543211",
+      "email": "amit@school.edu",
+      "created_at": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "name": "Priya Singh",
+      "type": "student",
+      "class_roll": "Class 9, Roll 5",
+      "subject": null,
+      "phone": "9876543212",
+      "email": "priya@email.com",
+      "created_at": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 4,
+      "name": "Ms. Sunita Verma",
+      "type": "teacher",
+      "class_roll": null,
+      "subject": "Mathematics",
+      "phone": "9876543213",
+      "email": "sunita@school.edu",
+      "created_at": "2024-01-01T00:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "name": "Harry Potter and the Philosopher's Stone",
+      "type": "teacher",
+      "class_roll": null,
+      "subject": "english",
+      "phone": null,
+      "email": null,
+      "created_at": "2025-11-23T15:05:06.302Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": 1,
+      "book_id": 1,
+      "borrower_id": 1,
+      "borrow_date": "2024-01-15",
+      "due_date": "2024-01-29",
+      "return_date": null,
+      "status": "borrowed",
+      "created_at": "2024-01-15T00:00:00.000Z",
+      "book_title": "Harry Potter and the Philosopher's Stone",
+      "borrower_name": "Rohan Kumar",
+      "borrower_type": "student"
+    },
+    {
+      "id": 2,
+      "book_id": 2,
+      "borrower_id": 2,
+      "borrow_date": "2024-01-10",
+      "due_date": "2024-01-24",
+      "return_date": "2024-01-23",
+      "status": "returned",
+      "created_at": "2024-01-10T00:00:00.000Z",
+      "book_title": "To Kill a Mockingbird",
+      "borrower_name": "Mr. Amit Sharma",
+      "borrower_type": "teacher"
+    },
+    {
+      "id": 3,
+      "book_id": 1,
+      "borrower_id": 5,
+      "borrow_date": "2025-11-23",
+      "due_date": "2025-12-07",
+      "return_date": "2025-11-23",
+      "status": "returned",
+      "created_at": "2025-11-23T15:05:06.303Z",
+      "book_title": "Harry Potter and the Philosopher's Stone",
+      "borrower_name": "Harry Potter and the Philosopher's Stone",
+      "borrower_type": "teacher"
+    },
+    {
+      "id": 3,
+      "book_id": 1,
+      "borrower_id": 5,
+      "borrow_date": "2025-11-23",
+      "due_date": "2025-12-07",
+      "return_date": null,
+      "status": "borrowed",
+      "created_at": "2025-11-23T15:06:03.472Z",
+      "book_title": "Harry Potter and the Philosopher's Stone",
+      "borrower_name": "Harry Potter and the Philosopher's Stone",
+      "borrower_type": "teacher"
+    }
+  ],
+  "reports": [
+    {
+      "id": 1,
+      "book_id": 1,
+      "reporter_name": "Rohan Kumar",
+      "issue_description": "Page 45 is torn and difficult to read",
+      "status": "pending",
+      "report_date": "2024-01-20T00:00:00.000Z",
+      "resolved_date": null,
+      "resolved_by": null,
+      "resolution_notes": null,
+      "book_title": "Harry Potter and the Philosopher's Stone",
+      "book_author": "J.K. Rowling"
+    },
+    {
+      "id": 2,
+      "book_id": 3,
+      "reporter_name": "Anonymous",
+      "issue_description": "Cover is damaged and spine is loose",
+      "status": "pending",
+      "report_date": "2024-01-21T00:00:00.000Z",
+      "resolved_date": null,
+      "resolved_by": null,
+      "resolution_notes": null,
+      "book_title": "The Great Gatsby",
+      "book_author": "F. Scott Fitzgerald"
+    }
+  ],
+  "fines": [
+    {
+      "id": 1,
+      "transaction_id": 1,
+      "borrower_id": 1,
+      "book_id": 1,
+      "days_late": 3,
+      "fine_amount": 15,
+      "paid_status": "paid",
+      "created_at": "2024-01-30T00:00:00.000Z",
+      "paid_at": "2025-11-23T15:06:54.491Z",
+      "book_title": "Harry Potter and the Philosopher's Stone",
+      "borrower_name": "Rohan Kumar"
+    }
+  ],
+  "counters": {
+    "books": 5,
+    "borrowers": 4,
+    "transactions": 2,
+    "reports": 2,
+    "fines": 1
+  }
+}
